@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Product | Bulenga Solar Solutions</title>
+<meta name="description" id="pageDescription" content="Fox ESS product details, available through Bulenga Solar Solutions in Kenya. Request a free quote.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="products">
+
+<div id="site-header"></div>
+
+<main>
+  <section class="page-hero" style="padding-bottom:40px;">
+    <div class="container">
+      <p class="breadcrumb"><a href="index.html">Home</a> / <a href="products.html">Products</a> / <span id="crumbCategory"></span></p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:40px;">
+    <div class="container">
+      <div class="product-detail__grid" id="productDetail">
+        <!-- populated by script -->
+      </div>
+
+      <div class="related-products" id="relatedWrap" style="display:none;">
+        <div class="section-head">
+          <span class="eyebrow">You Might Also Consider</span>
+          <h2>Related Products</h2>
+        </div>
+        <div class="product-grid" id="relatedGrid"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<div id="whatsapp-float"></div>
+
+<script src="assets/products-data.js"></script>
+<script src="script.js"></script>
+<script>
+  function renderProductDetail() {
+    const id = getQueryParam("id");
+    const product = getProductById(id);
+    const detailEl = document.getElementById("productDetail");
+
+    if (!product) {
+      detailEl.innerHTML = `
+        <div style="grid-column:1/-1; text-align:center; padding:40px 0;">
+          <h2>Product not found</h2>
+          <p style="color:var(--gray-500); margin-top:10px;">We couldn't find that product. Browse the full range instead.</p>
+          <a href="products.html" class="btn btn--primary" style="margin-top:20px;">View All Products</a>
+        </div>`;
+      return;
+    }
+
+    const cat = getCategoryById(product.category);
+    document.title = `${product.name} — ${cat ? cat.name : "Solar Product"} | Bulenga Solar Solutions`;
+    document.getElementById("pageDescription").setAttribute("content", product.shortDescription);
+    document.getElementById("crumbCategory").innerHTML = cat
+      ? `<a href="products.html?category=${cat.id}">${cat.name}</a> / ${product.name}`
+      : product.name;
+
+    const bg = getImageBg(product.image);
+    const waMsg = `Hello Bulenga Solar Solutions, I would like to enquire about the Fox ESS ${product.name}.`;
+
+    const specChips = [
+      product.powerRange && product.powerRange !== "—" ? { label: "Power Range", value: product.powerRange } : null,
+      product.phase && product.phase !== "—" ? { label: "Phase", value: product.phase } : null,
+      product.mppt && product.mppt !== "—" ? { label: "MPPT", value: product.mppt } : null,
+      product.ipRating && product.ipRating !== "—" ? { label: "IP Rating", value: product.ipRating } : null
+    ].filter(Boolean);
+
+    detailEl.innerHTML = `
+      <div class="product-detail__media" style="background:${bg}">
+        <img src="${product.image}" alt="Fox ESS ${product.name} — ${product.seriesLabel}">
+      </div>
+      <div>
+        <p class="product-detail__category">${cat ? cat.name : ""}</p>
+        <h1 class="product-detail__title">${product.name}</h1>
+        <p class="product-detail__series">${product.seriesLabel}</p>
+
+        ${specChips.length ? `<div class="spec-row">${specChips.map(s => `
+          <div class="spec-chip"><span>${s.label}</span><strong>${s.value}</strong></div>
+        `).join("")}</div>` : ""}
+
+        <p class="product-detail__desc">${product.detailedDescription}</p>
+
+        <div class="product-detail__section">
+          <h3>Key Features</h3>
+          <ul class="feature-list">${product.features.map(f => `<li>${f}</li>`).join("")}</ul>
+        </div>
+
+        <div class="product-detail__section">
+          <h3>Suitable Applications</h3>
+          <div class="application-tags">${product.applications.map(a => `<span class="application-tag">${a}</span>`).join("")}</div>
+        </div>
+
+        <div class="product-detail__ctas">
+          <a href="contact.html?product=${encodeURIComponent(product.name)}#quote" class="btn btn--primary">Request a Quote</a>
+          <a href="${waLink(waMsg)}" target="_blank" rel="noopener" class="btn btn--cyan">WhatsApp Us</a>
+          <a href="tel:+254717202777" class="btn btn--outline">Call Us</a>
+        </div>
+      </div>`;
+
+    // Related products: same category, excluding this one
+    if (cat) {
+      const related = getProductsByCategory(cat.id).filter(p => p.id !== product.id).slice(0, 3);
+      if (related.length) {
+        document.getElementById("relatedWrap").style.display = "block";
+        renderProductGrid("relatedGrid", related);
+      }
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", renderProductDetail);
+</script>
+</body>
+</html>
