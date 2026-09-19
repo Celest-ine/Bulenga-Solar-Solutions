@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Products | PV Inverters, Batteries &amp; EV Chargers — Bulenga Solar Solutions</title>
+<meta name="description" content="Browse Bulenga Solar Solutions' range of Fox ESS solar products: PV inverters, hybrid inverters, microinverters, batteries, EV chargers and monitoring accessories. No prices — request a free quote.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="products">
+
+<div id="site-header"></div>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <p class="breadcrumb"><a href="index.html">Home</a> / Products</p>
+      <h1>Solar Products &amp; Energy Solutions</h1>
+      <p>Explore Fox ESS inverters, batteries, microinverters, EV chargers and monitoring equipment available through Bulenga Solar Solutions. Every product page includes full details and a direct route to request a quote — no prices, just honest information to help you choose.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="category-filter" id="categoryFilter">
+        <button class="filter-chip is-active" data-category="all">All Products</button>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <div class="cta-band">
+        <div>
+          <h2>Not sure which product fits your property?</h2>
+          <p>Tell us about your home or business and energy goals — we'll recommend a suitable solution and provide a free quote.</p>
+        </div>
+        <div class="cta-band__actions">
+          <a href="contact.html#quote" class="btn" style="background:#fff;color:var(--blue-700);">Request a Quote</a>
+          <a href="tel:+254717202777" class="btn btn--ghost-light">Call Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<div id="whatsapp-float"></div>
+
+<script src="assets/products-data.js"></script>
+<script src="script.js"></script>
+<script>
+  function applyFilter(categoryId) {
+    const products = categoryId === "all" ? PRODUCTS : getProductsByCategory(categoryId);
+    renderProductGrid("productGrid", products);
+    document.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.classList.toggle("is-active", chip.dataset.category === categoryId);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const filterEl = document.getElementById("categoryFilter");
+    PRODUCT_CATEGORIES.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = "filter-chip";
+      btn.dataset.category = cat.id;
+      btn.textContent = cat.name;
+      filterEl.appendChild(btn);
+    });
+
+    filterEl.addEventListener("click", (e) => {
+      const chip = e.target.closest(".filter-chip");
+      if (!chip) return;
+      applyFilter(chip.dataset.category);
+      const url = new URL(window.location);
+      if (chip.dataset.category === "all") url.searchParams.delete("category");
+      else url.searchParams.set("category", chip.dataset.category);
+      window.history.replaceState({}, "", url);
+    });
+
+    const initial = getQueryParam("category") || "all";
+    applyFilter(initial);
+  });
+</script>
+</body>
+</html>
