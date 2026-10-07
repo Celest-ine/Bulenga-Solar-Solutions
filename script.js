@@ -18,7 +18,7 @@ const COMPANY = {
   email: "adminteam@bulengaenergysolutions.co.ke"
 };
 
-const QUOTE_WEBHOOK_URL = "https://formspree.io/f/xgaeddpk";
+const QUOTE_WEBHOOK_URL = "https://formspree.io/f/mbgddany"; // Replace with the actual endpoint
 
 /* ---------------------------------------------------------
    ICONS (inline SVG, stroke-based, currentColor)
