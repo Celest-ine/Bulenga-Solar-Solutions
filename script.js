@@ -261,9 +261,11 @@ async function sendFormData(payload) {
     throw new Error("ENDPOINT_NOT_CONFIGURED");
   }
 
-  const form = document.getElementById("quoteForm");
-  const formData = new FormData(form);
-  formData.append("form_type", payload.form_type);
+  const formData = new FormData();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
 
   const response = await fetch(QUOTE_WEBHOOK_URL, {
     method: "POST",
