@@ -54,6 +54,7 @@ const NAV_LINKS = [
   { href: "about.html", label: "About", key: "about" },
   { href: "products.html", label: "Products", key: "products" },
   { href: "services.html", label: "Services", key: "services" },
+   { href: "gallery.html", label: "Gallery", key: "gallery" },
   { href: "contact.html", label: "Contact", key: "contact" }
 ];
 
@@ -116,6 +117,7 @@ function renderFooter() {
           <a href="products.html">Products</a>
           <a href="services.html">Services</a>
           <a href="contact.html">Contact</a>
+          <a href="gallery.html">Gallery</a>
         </div>
         <div class="footer-col">
           <h4>Products</h4>
